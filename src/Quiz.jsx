@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import './Quiz.css';
 
-const Quiz = ({ data }) => {
+const Quiz = ({ data, onNewFile }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [score, setScore] = useState(0);
@@ -23,20 +24,29 @@ const Quiz = ({ data }) => {
     }
   };
 
+  const handlePlayAgain = () => {
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
+    setScore(0);
+    setShowScore(false);
+  };
+
   return (
-    <div>
+    <div className="quiz-container">
       {showScore ? (
-        <div>You scored {score} out of {data.length}</div>
+        <div>
+          <div className="score-display">You scored {score} out of {data.length}</div>
+          <button onClick={handlePlayAgain} className="option-button">Play Again</button>
+          <button onClick={onNewFile} className="option-button">New File</button>
+        </div>
       ) : (
         <div>
-          <div>{data[currentQuestionIndex].question}</div>
+          <div className="question">{data[currentQuestionIndex].question}</div>
           {data[currentQuestionIndex].options.map((option, index) => (
             <button
               key={index}
               onClick={() => handleOptionClick(index)}
-              style={{
-                backgroundColor: selectedOption === index ? (option.isCorrect ? 'green' : 'red') : ''
-              }}
+              className={`option-button ${selectedOption === index ? (option.isCorrect ? 'correct' : 'incorrect') : ''}`}
             >
               {option.option}
             </button>
@@ -59,6 +69,7 @@ Quiz.propTypes = {
         ).isRequired,
       })
     ).isRequired,
+    onNewFile: PropTypes.func.isRequired,
   };
 
 export default Quiz;
