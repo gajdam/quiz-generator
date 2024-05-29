@@ -1,10 +1,9 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import mammoth from 'mammoth';
-import Quiz from './Quiz'; 
 
 const ProcessData = () => {
-  const [data, setData] = useState([]);
+  const [setData] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
     console.log('Files dropped:', acceptedFiles);
@@ -42,8 +41,6 @@ const ProcessData = () => {
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
-      {/* Render your data here */}
-      {data.length > 0 && <Quiz data={data} />}
     </div>
   );
 };
