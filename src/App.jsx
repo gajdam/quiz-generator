@@ -14,13 +14,14 @@ const App = () => {
       reader.onabort = () => console.log('file reading was aborted');
       reader.onerror = () => console.log('file reading has failed');
       reader.onload = async () => {
+        const startsWithArray = ['a.', 'b.', 'c.', 'd.', 'e.', 'a)', 'b)', 'c)', 'd)', 'e)'];  
         const response = { data: new Blob([reader.result]) };
         const text = await mammoth.extractRawText({ arrayBuffer: await response.data.arrayBuffer() });
         const lines = text.value.split('\n');
         const jsonData = lines.reduce((acc, line) => {
-          if (line.startsWith('Zad')) {
+          if (line.startsWith('Zad') || (line.charCodeAt(0) >= 48 && line.charCodeAt(0) <= 57)) {
             acc.push({ question: line, options: [] });
-          } else if (line.startsWith('a.') || line.startsWith('b.') || line.startsWith('c.') || line.startsWith('d.') || line.startsWith('e.')) {
+          } else if (startsWithArray.some((start) => line.startsWith(start))) {
             const isCorrect = line.endsWith('+');
             const option = isCorrect ? line.slice(3, -1).trim() : line.slice(2).trim();
             acc[acc.length - 1].options.push({ option, isCorrect });
