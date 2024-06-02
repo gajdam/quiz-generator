@@ -19,9 +19,10 @@ const App = () => {
         const text = await mammoth.extractRawText({ arrayBuffer: await response.data.arrayBuffer() });
         const lines = text.value.split('\n');
         const jsonData = lines.reduce((acc, line) => {
-          if (line.startsWith('Zad') || (line.charCodeAt(0) >= 48 && line.charCodeAt(0) <= 57)) {
+          const lowerCaseLine = line.toLowerCase();
+          if (lowerCaseLine.startsWith('zad') || (line.charCodeAt(0) >= 48 && line.charCodeAt(0) <= 57)) {
             acc.push({ question: line, options: [] });
-          } else if (startsWithArray.some((start) => line.startsWith(start))) {
+          } else if (startsWithArray.some((start) => lowerCaseLine.startsWith(start))) {
             const isCorrect = line.endsWith('+');
             const option = isCorrect ? line.slice(3, -1).trim() : line.slice(2).trim();
             acc[acc.length - 1].options.push({ option, isCorrect });
